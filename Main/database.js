@@ -6,12 +6,18 @@ export const pool = createPool({
     user: "root",
     password: DatabasePassword,
     database: "studysnap",
-})
+}).promise()
 
-var result = []
-pool.query(`
-    SELECT * FROM user;
-    `,(err, res) => {console.log(err); console.log(res)}
-)
+pool.query(`SELECT * FROM user;`)
 
-/*This is a place for queries*/ 
+
+/*This is a place for queries
+ * get user 
+get users subjects, saved sections
+get subjects setions
+get sections notes
+get likes
+get saves
+get sections
+ * 
+*/

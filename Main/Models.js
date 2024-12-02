@@ -3,7 +3,7 @@ import { pool } from './database.js'
 
 // Add Fail Handeling
 
-class User {
+export class User {
 
     constructor(username, full_name, email, password, date_created, validated, profile_picture, id = uuid()) {
         this.id = id;
@@ -16,14 +16,14 @@ class User {
         this.profile_picture = profile_picture;
     }
 
-    Insert() {
+    async Insert() {
         pool.execute(`
             INSERT INTO user (id, username, full_name, email, password, date_created, validated, profile_picture)
             VALUES ('${this.id}', '${this.username}', '${this.full_name}', '${this.email}', '${this.password}', '${this.date_created}', ${this.validated}, ${this.profile_picture});
                 `), (err, res) => { console.log(err); console.log(res) }
     }
 
-    Update() {
+    async Update() {
         pool.execute(`
             UPDATE user
             SET username = '${this.username}', full_name = '${this.full_name}', email = '${this.email}', password =  '${this.password}', date_created = '${this.date_created}', validated = ${this.validated}, profile_picture = ${this.profile_picture}
@@ -31,7 +31,7 @@ class User {
             `), (err, res) => { console.log(err); console.log('gotovo') }
     }
 
-    Delete() {
+    async Delete() {
         pool.execute(`
             DELETE FROM user WHERE id = '${this.id}'
             `), (err) => { console.error(err) }
@@ -39,7 +39,7 @@ class User {
 
 }
 
-class Subject {
+export class Subject {
 
     constructor(name, details, creator, id = uuid()) {
         this.id = id;
@@ -48,14 +48,14 @@ class Subject {
         this.creator = creator;
     }
 
-    Insert() {
+    async Insert() {
         pool.execute(`
             INSERT INTO subject (id, name, details, creator)
             VALUES ('${this.id}', '${this.name}', '${this.details}', '${this.creator}');
                 `), (err) => { console.log(err) }
     }
 
-    Update() {
+    async Update() {
         pool.execute(`
             UPDATE subject
             SET name = '${this.name}', details = '${this.details}', creator = '${this.creator}'
@@ -63,14 +63,14 @@ class Subject {
             `), (err, res) => { console.error(err) }
     }
 
-    Delete() {
+    async Delete() {
         pool.execute(`
             DELETE FROM subject WHERE id = '${this.id}';
             `), (err) => { console.error(err) }
     }
 }
 
-class Section {
+export class Section {
 
     constructor(title, details, is_public, subject_id, id = uuid()) {
         this.id = id;
@@ -79,14 +79,14 @@ class Section {
         this.is_public = is_public;
         this.subject_id = subject_id;
     }
-    Insert() {
+    async Insert() {
         pool.execute(`
             INSERT INTO section (id, title, details, is_public, subject_id)
             VALUES ('${this.id}', '${this.title}', '${this.details}', ${this.is_public}, ${this.subject_id});
                 `),(err)=>console.error(err)
     }
 
-    Update() {
+    async Update() {
         pool.execute(`
             UPDATE section
             SET title = '${this.title}', details = '${this.details}', is_public =  '${this.is_public}, subject_id = ${this.subject_id}'
@@ -94,7 +94,7 @@ class Section {
             `), (err, res) => { console.error(err) }
     }
 
-    Delete() {
+    async Delete() {
         pool.execute(`
             DELETE FROM section WHERE id = '${this.id}';
             `), (err) => { console.log(err) }
@@ -102,7 +102,7 @@ class Section {
 }
 
 
-class Note {
+export class Note {
 
     constructor(title, content, section_id, id = uuid()) {
         this.id = id;
@@ -111,14 +111,14 @@ class Note {
         this.section_id = section_id;
     }
 
-    Insert() {
+    async Insert() {
         pool.execute(`
             INSERT INTO note (id, title, content, section_id)
             VALUES ('${this.id}', '${this.title}', '${this.content}', '${this.section_id}');
                 `), (err, res) => { console.log(err); console.log(res) }
     }
 
-    Update() {
+    async Update() {
         pool.execute(`
             UPDATE note
             SET title = '${this.title}', content = '${this.content}', section_id = '${this.section_id}'
@@ -126,7 +126,7 @@ class Note {
             `), (err, res) => { console.log(err); console.log('gotovo') }
     }
 
-    Delete() {
+    async Delete() {
         pool.execute(`
             DELETE FROM note WHERE id = '${this.id}'
             `), (err) => { console.error(err) }
@@ -134,7 +134,7 @@ class Note {
 
 }
 
-class Likes {
+export class Likes {
 
     constructor(user_id, subject_id) {
         this.id = user_id + subject_id
@@ -142,14 +142,14 @@ class Likes {
         this.subject_id = subject_id;
     }
 
-    Insert() {
+    async Insert() {
         pool.execute(`
             INSERT INTO likes (id, user_id, subject_id)
             VALUES ('${this.id}', '${this.user_id}', '${this.subject_id}');
                 `), (err, res) => { console.log(err); console.log(res) }
     }
 
-    Delete() {
+    async Delete() {
         pool.execute(`
             DELETE FROM likes WHERE id = '${this.id}'
             `), (err) => { console.error(err) }
@@ -157,7 +157,7 @@ class Likes {
 }
 
 
-class Saves {
+export class Saves {
 
     constructor(user_id, subject_id) {
         this.id = user_id + subject_id
@@ -165,14 +165,14 @@ class Saves {
         this.subject_id = subject_id;
     }
 
-    Insert() {
+    async Insert() {
         pool.execute(`
             INSERT INTO saves (id, user_id, subject_id)
             VALUES ('${this.id}', '${this.user_id}', '${this.subject_id}');
                 `), (err, res) => { console.log(err); console.log(res) }
     }
 
-    Delete() {
+    async Delete() {
         pool.execute(`
             DELETE FROM saves WHERE id = '${this.id}'
             `), (err) => { console.error(err) }
