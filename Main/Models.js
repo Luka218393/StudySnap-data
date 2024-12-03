@@ -20,7 +20,7 @@ export class User {
         pool.execute(`
             INSERT INTO user (id, username, full_name, email, password, date_created, validated, profile_picture)
             VALUES ('${this.id}', '${this.username}', '${this.full_name}', '${this.email}', '${this.password}', '${this.date_created}', ${this.validated}, ${this.profile_picture});
-                `), (err, res) => { console.log(err); console.log(res) }
+                `).then(()=>{return})
     }
 
     async Update() {
