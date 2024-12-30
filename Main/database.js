@@ -8,8 +8,18 @@ export const pool = createPool({
     database: "studysnap",
 }).promise()
 
-pool.query(`SELECT * FROM user;`)
+export async function QueryUserByEmail(email) {
+    const result = await pool.query(`SELECT * FROM user WHERE email = $1`, [email]);
+    return result.rows[0];
+}
 
+export async function IsUsernameOrEmailTaken(username, email) {
+    const result = await pool.query(
+        `SELECT * FROM user WHERE username = $1 OR email = $2`,
+        [username, email]
+    );
+    return result.rows.length > 0;
+}
 
 /*This is a place for queries
  * get user 
