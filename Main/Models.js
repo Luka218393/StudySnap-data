@@ -5,7 +5,7 @@ import { pool } from './database.js'
 
 export class User {
 
-    constructor(username, full_name, email, password, date_created, validated, profile_picture, id = uuid()) {
+    constructor(username, full_name, email, password, date_created = new Date(), validated = false, profile_picture = null, id = uuid()) {
         this.id = id;
         this.username = username;
         this.full_name = full_name;
@@ -20,7 +20,7 @@ export class User {
         pool.execute(`
             INSERT INTO user (id, username, full_name, email, password, date_created, validated, profile_picture)
             VALUES ('${this.id}', '${this.username}', '${this.full_name}', '${this.email}', '${this.password}', '${this.date_created}', ${this.validated}, ${this.profile_picture});
-                `).then(()=>{return})
+                `)
     }
 
     async Update() {
