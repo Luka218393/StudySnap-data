@@ -179,3 +179,88 @@ export class Saves {
     }
 }
 
+/*
+export class Section {
+    constructor(title, details, is_public, subject_id, id = uuid()) {
+        this.id = id;
+        this.title = title;
+        this.details = details;
+        this.is_public = is_public;
+        this.subject_id = subject_id;
+    }
+
+    async Insert() {
+        try {
+            await pool.execute(`
+                INSERT INTO section (id, title, details, is_public, subject_id)
+                VALUES (?, ?, ?, ?, ?);
+            `, [this.id, this.title, this.details, this.is_public, this.subject_id]);
+        } catch (err) {
+            console.error('Error inserting section:', err);
+        }
+    }
+
+    async Update() {
+        try {
+            await pool.execute(`
+                UPDATE section
+                SET title = ?, details = ?, is_public = ?, subject_id = ?
+                WHERE id = ?;
+            `, [this.title, this.details, this.is_public, this.subject_id, this.id]);
+        } catch (err) {
+            console.error('Error updating section:', err);
+        }
+    }
+
+    async Delete() {
+        try {
+            await pool.execute(`
+                DELETE FROM section WHERE id = ?;
+            `, [this.id]);
+        } catch (err) {
+            console.error('Error deleting section:', err);
+        }
+    }
+}
+
+export class Note {
+    constructor(title, content, section_id, id = uuid()) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.section_id = section_id;
+    }
+
+    async Insert() {
+        try {
+            await pool.execute(`
+                INSERT INTO note (id, title, content, section_id)
+                VALUES (?, ?, ?, ?);
+            `, [this.id, this.title, this.content, this.section_id]);
+        } catch (err) {
+            console.error('Error inserting note:', err);
+        }
+    }
+
+    async Update() {
+        try {
+            await pool.execute(`
+                UPDATE note
+                SET title = ?, content = ?, section_id = ?
+                WHERE id = ?;
+            `, [this.title, this.content, this.section_id, this.id]);
+        } catch (err) {
+            console.error('Error updating note:', err);
+        }
+    }
+
+    async Delete() {
+        try {
+            await pool.execute(`
+                DELETE FROM note WHERE id = ?;
+            `, [this.id]);
+        } catch (err) {
+            console.error('Error deleting note:', err);
+        }
+    }
+} */

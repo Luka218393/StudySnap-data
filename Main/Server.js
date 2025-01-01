@@ -1,9 +1,8 @@
 import express from 'express'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
-import { User } from "./Models"
-import {QueryUserByEmail, IsUsernameOrEmailTaken} from "./database"
-
+import { User } from "./Models.js"
+import {QueryUserByEmail, IsUsernameOrEmailTaken} from "./database.js"
 
 const PORT = 8080
 const app = express()
@@ -11,23 +10,13 @@ app.use(express.json())
 
 
 let activeTokens = [];
-let users = [
-    {
-        "name": "name1",
-        "email": "email1",
-        "password": "password1"
-    },
-    {
-        "name": "name2",
-        "email": "email2",
-        "password": "password2"
-    },
-    {
-        "name": "name3",
-        "email": "email3",
-        "password": "password3"
-    }
-]
+
+
+const scheduleTokenRemoval = (token, expiresIn) => {
+    setTimeout(() => {
+        activeTokens = activeTokens.filter(t => t !== token);
+    }, expiresIn * 1000);
+};
 
 const verify = (req, res, next) => {
     const authHeader = req.headers.authorization;
@@ -60,21 +49,25 @@ app.post('/refresh-token', verify, (req, res) => {
     }
 
     const newToken = jwt.sign({ id: decodedToken.id }, 'SecretKey', { expiresIn: '15m' });
-    activeTokens = activeTokens.filter(element => element != token);
+    activeTokens = activeTokens.filter(element => element !== token);
     activeTokens.push(newToken);
-    res.json({ id: decodedToken.id, newToken });
+    scheduleTokenRemoval(newToken, 15 * 60); 
+
+    res.json({ newToken });
 });
 
 // Log in token
+/* You need to provide email and original (not hashed) password) */
 app.post('/log-in', async (req, res) => {
     const { email, password } = req.body;
-    const user = QueryUserByEmail(email) // This should be a query to the database
+    const user = await QueryUserByEmail(email)
     if (user) {
         const passwordMatch = await bcrypt.compare(password, user.password);
         if (passwordMatch) {
             const newToken = jwt.sign({ id: user.id }, 'SecretKey', { expiresIn: '15m' });
             activeTokens.push(newToken);
-            res.json({ email: user.email, newToken });
+            scheduleTokenRemoval(newToken, 15 * 60); // Schedule removal of the new token after 15 minutes
+            res.json({ newToken });
         } else {
             res.status(401).json('Invalid password');
         }
@@ -83,18 +76,18 @@ app.post('/log-in', async (req, res) => {
     }
 });
 
-app.post('/sign-up', (req, res) => {
+app.post('/sign-up', async (req, res) => {
     const { username, full_name, email, password } = req.body;
     if (!username || !full_name || !email || !password) {
         return res.status(400).send("Insufficient data provided");
     }
     const user = new User ( username, full_name, email, password,)
-    if (IsUsernameOrEmailTaken(username) ){
+    if (await IsUsernameOrEmailTaken(username) ){
         res.status(409).send("Username or email is already taken")
         return
     }
     try{
-        user.Insert()
+        await user.Insert()
         res.status(201).send()
     }catch(err){
         res.status(501)
@@ -107,48 +100,3 @@ app.listen(
     () => { console.log(`App started on port ${PORT}`) }
 )
 
-/*
-app.post("/completion", (req, res) => {}
-
-app.post("/completionWithContext", (req, res) => {}
-
-app.post("/imageNote", (req, res) => {}
-
-app.post("/quizz", (req, res) => {}
-
-    app.post("/refresh-token", (req, res) => {
-
-app.post("/log-in", (req, res) => {
-+JWT - mora expierat
-    */
-
-
-/*
-app.get("/login")
-
-app.get("/home")
-
-app.get("subject/:id")
-
-app.get("/discover")*/
-
-/*
-app.get(`/user`, (req, res) => {
-    res.status(200).send({
-        1: "Pokemoni",
-        2: "Pokemoni 2"
-    })
-})
-
-app.post("/user/:id", (req, res) => {
-    const { id } = req.params
-    const { logo } = req.body
-
-    if (!logo) {
-        res.status(418).send({ Message: "We need a logo 20000" })
-    }
-    res.send({
-        eo: `theese are your ${id}, ${logo}`
-    })
-})
-*/

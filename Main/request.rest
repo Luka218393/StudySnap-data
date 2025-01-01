@@ -2,12 +2,24 @@ POST http://localhost:8080/log-in
 Content-Type: application/json
 
 {
-    "email":"email1",
+    "email":"email101",
     "password":"password1"
 }
+//password1, salt:10
 
 ###
+POST http://localhost:8080/sign-up
+Content-Type: application/json
 
+{
+    "username":"username201",
+    "full_name":"Lux AEterna",
+    "email":"email101",
+    "password":"$2a$10$oTsNaAmt0TIqDm3K/eh8HObbW3lFNGP6UwLcPpsa6L2pHeSnGLtdG"
+}
+//password1, salt:10
+
+###
 POST http://localhost:8080/refresh-token
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MzU1NzI5MzQsImV4cCI6MTczNTU3MzgzNH0.IhyKSywhulXKi95OE7setCaUqxuZfTO2Cu9y9-QNTVA
